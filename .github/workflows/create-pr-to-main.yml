@@ -1,0 +1,46 @@
+name: "Auto Create PR: develop -> main"
+
+on:
+  push:
+    branches: [ 'develop' ]
+
+permissions:
+  contents: write
+
+jobs:
+  create-pr:
+    name: Create PR to main
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create PR from develop into main (if none exists)
+        uses: actions/github-script@v6
+        with:
+          script: |
+            const head = 'develop';
+            const base = 'main';
+            const title = `Automated PR: ${head} → ${base}`;
+            const body = `This pull request was automatically created from branch \\`${head}\\` into \\`${base}\\` by workflow \\`.github/workflows/create-pr-to-main.yml\\`.`;
+
+            // Avoid running when actions itself triggered the push
+            if (context.actor === 'github-actions') {
+              console.log('Triggered by github-actions; skipping PR creation to avoid loops.');
+              return;
+            }
+
+            const { owner, repo } = context.repo;
+
+            // If there's already an open PR from develop to main, do nothing
+            const existing = await github.rest.pulls.list({ owner, repo, head: `${owner}:develop`, base: 'main', state: 'open' });
+            if (existing.data && existing.data.length > 0) {
+              console.log(`An open PR already exists: ${existing.data[0].html_url}`);
+              return;
+            }
+
+            try {
+              const pr = await github.rest.pulls.create({ owner, repo, title, head, base, body });
+              console.log(`Created PR: ${pr.data.html_url}`);
+            } catch (err) {
+              console.log(`Failed to create PR: ${err.message}`);
+              core.setFailed?.(err.message);
+            }
