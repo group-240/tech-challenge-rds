@@ -19,28 +19,21 @@ jobs:
           script: |
             const head = 'develop';
             const base = 'main';
-            const title = `Automated PR: ${head} → ${base}`;
-            const body = `This pull request was automatically created from branch \\`${head}\\` into \\`${base}\\` by workflow \\`.github/workflows/create-pr-to-main.yml\\`.`;
+            const title = 'Automated PR: ' + head + ' -> ' + base;
+            const body = 'Automated PR from ' + head + ' into ' + base + '.';
 
-            // Avoid running when actions itself triggered the push
             if (context.actor === 'github-actions') {
-              console.log('Triggered by github-actions; skipping PR creation to avoid loops.');
+              console.log('Triggered by github-actions; skipping PR creation.');
               return;
             }
 
             const { owner, repo } = context.repo;
 
-            // If there's already an open PR from develop to main, do nothing
-            const existing = await github.rest.pulls.list({ owner, repo, head: `${owner}:develop`, base: 'main', state: 'open' });
+            const existing = await github.rest.pulls.list({ owner, repo, head: owner + ':develop', base: 'main', state: 'open' });
             if (existing.data && existing.data.length > 0) {
-              console.log(`An open PR already exists: ${existing.data[0].html_url}`);
+              console.log('An open PR already exists: ' + existing.data[0].html_url);
               return;
             }
 
-            try {
-              const pr = await github.rest.pulls.create({ owner, repo, title, head, base, body });
-              console.log(`Created PR: ${pr.data.html_url}`);
-            } catch (err) {
-              console.log(`Failed to create PR: ${err.message}`);
-              core.setFailed?.(err.message);
-            }
+            const pr = await github.rest.pulls.create({ owner, repo, title, head, base, body });
+            console.log('Created PR: ' + pr.data.html_url);

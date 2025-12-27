@@ -20,32 +20,23 @@ jobs:
         uses: actions/github-script@v6
         with:
           script: |
-            const headRef = context.ref.replace('refs/heads/', '');
-            const head = headRef;
+            const head = context.ref.replace('refs/heads/', '');
             const base = 'develop';
-            const title = `Automated PR: ${head} → ${base}`;
-            const body = `This pull request was automatically created from branch \\`${head}\\` into \\`${base}\\` by workflow \\`.github/workflows/create-pr-to-develop.yml\\`.`;
+            const title = 'Automated PR: ' + head + ' -> ' + base;
+            const body = 'Automated PR from ' + head + ' into ' + base + '.';
 
-            // Avoid creating PRs when actor is the GitHub Actions bot to reduce loops
             if (context.actor === 'github-actions') {
-              console.log('Triggered by github-actions; skipping PR creation to avoid loops.');
+              console.log('Triggered by github-actions; skipping PR creation.');
               return;
             }
 
             const { owner, repo } = context.repo;
 
-            // Check for an existing open PR from this head to base
-            const existing = await github.rest.pulls.list({ owner, repo, head: `${owner}:${head}`, base, state: 'open' });
+            const existing = await github.rest.pulls.list({ owner, repo, head: owner + ':' + head, base, state: 'open' });
             if (existing.data && existing.data.length > 0) {
-              console.log(`An open PR already exists: ${existing.data[0].html_url}`);
+              console.log('An open PR already exists: ' + existing.data[0].html_url);
               return;
             }
 
-            // Create PR
-            try {
-              const pr = await github.rest.pulls.create({ owner, repo, title, head, base, body });
-              console.log(`Created PR: ${pr.data.html_url}`);
-            } catch (err) {
-              console.log(`Failed to create PR: ${err.message}`);
-              core.setFailed?.(err.message);
-            }
+            const pr = await github.rest.pulls.create({ owner, repo, title, head, base, body });
+            console.log('Created PR: ' + pr.data.html_url);
