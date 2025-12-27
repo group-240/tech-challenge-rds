@@ -4,8 +4,9 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      # Use a clear, compatible range. Adjust if you need a different major version.
-      version = ">= 5.0.0, < 6.0.0"
+      # The VPC module used in this repo requires AWS provider v6.x (module v6.x).
+      # Allow a compatible v6 range. If you intentionally need v5, pin the VPC module to v5.
+      version = ">= 6.0.0, < 7.0.0"
     }
   }
 
