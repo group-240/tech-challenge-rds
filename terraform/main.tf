@@ -10,7 +10,7 @@ terraform {
     }
   }
 
-  # ⚠️ BEST PRACTICE: Uncomment this block after creating the S3 bucket manually
+  # BEST PRACTICE: Uncomment this block after creating the S3 bucket manually
   # backend "s3" {
   #   bucket         = "my-terraform-state-bucket"
   #   key            = "tech-challenge/db/terraform.tfstate"
@@ -22,7 +22,7 @@ terraform {
 
 provider "aws" {
   region = var.aws_region
-  
+
   default_tags {
     tags = {
       Project     = "TechChallenge"
