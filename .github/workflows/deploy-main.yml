@@ -10,6 +10,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    env:
+      TF_VAR_db_username: ${{ secrets.DB_USERNAME }}
+      TF_VAR_db_password: ${{ secrets.DB_PASSWORD }}
     defaults:
       run:
         working-directory: ./terraform
