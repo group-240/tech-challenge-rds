@@ -18,6 +18,7 @@ Repositório responsável pelo banco de dados PostgreSQL na AWS.
 
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
+- `AWS_SESSION_TOKEN` (obrigatório para AWS Academy Learner Lab)
 - `DB_USERNAME` - Usuário do PostgreSQL
 - `DB_PASSWORD` - Senha do PostgreSQL
 
