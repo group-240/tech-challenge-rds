@@ -10,7 +10,7 @@ resource "aws_db_subnet_group" "db_subnet_group" {
 resource "aws_db_instance" "postgres" {
   identifier        = "tech-challenge-db"
   engine            = "postgres"
-  engine_version    = "15.4"
+  engine_version    = "18.1"
   instance_class    = "db.t3.micro"
   allocated_storage = 20
 
