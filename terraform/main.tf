@@ -1,23 +1,21 @@
 terraform {
-  required_version = ">= 1.0.0"
+  required_version = ">= 1.10.0"
 
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      # The VPC module used in this repo requires AWS provider v6.x.
-      # Allow a compatible v6 range. If you need v5.x, pin the module instead.
-      version = ">= 6.0.0, < 7.0.0"
+      version = "~> 6.0"
     }
   }
 
-  # BEST PRACTICE: Uncomment this block after creating the S3 bucket manually
-  # backend "s3" {
-  #   bucket         = "my-terraform-state-bucket"
-  #   key            = "tech-challenge/db/terraform.tfstate"
-  #   region         = "us-east-1"
-  #   dynamodb_table = "terraform-locks"
-  #   encrypt        = true
-  # }
+  backend "s3" {
+    bucket         = "tech-challenge-tfstate-group240"
+    key            = "rds/terraform.tfstate"
+    region         = "us-east-1"
+    encrypt        = true
+    use_lockfile   = true  # S3 native locking (Terraform 1.10+)
+    dynamodb_table = "tech-challenge-terraform-locks"  # Fallback for backwards compatibility
+  }
 }
 
 provider "aws" {
@@ -29,5 +27,15 @@ provider "aws" {
       Environment = var.environment
       ManagedBy   = "Terraform"
     }
+  }
+}
+
+# Remote state from infra
+data "terraform_remote_state" "infra" {
+  backend = "s3"
+  config = {
+    bucket = "tech-challenge-tfstate-group240"
+    key    = "infra/terraform.tfstate"
+    region = "us-east-1"
   }
 }
