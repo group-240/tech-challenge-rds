@@ -26,4 +26,10 @@ resource "aws_db_instance" "postgres" {
   publicly_accessible = false
   skip_final_snapshot = true
   deletion_protection = false
+
+  # Learner Lab: Enhanced monitoring NÃO é suportado
+  monitoring_interval = 0
+  
+  # Learner Lab: Performance Insights pode não ser suportado
+  performance_insights_enabled = false
 }
