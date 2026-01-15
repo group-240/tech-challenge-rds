@@ -4,8 +4,8 @@ Repositório responsável pelo banco de dados PostgreSQL na AWS.
 
 ## O que este repositório cria
 
-- **RDS PostgreSQL** - Banco de dados relacional
-- **Security Group** - Regras de firewall para o banco
+- **RDS PostgreSQL** - Banco de dados relacional.
+- **Security Group** - Regras de firewall para o banco.
 
 ## Dependências
 
