@@ -15,7 +15,6 @@ Repositório responsável pelo banco de dados PostgreSQL na AWS.
 | Terraform >= 1.10.0 | Ferramenta de IaC |
 
 ## Secrets Necessários (GitHub)
-
 - `AWS_ACCESS_KEY_ID`
 - `AWS_SECRET_ACCESS_KEY`
 - `AWS_SESSION_TOKEN` (obrigatório para AWS Academy Learner Lab)
